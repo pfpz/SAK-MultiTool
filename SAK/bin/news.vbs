@@ -1,0 +1,1 @@
+x=msgbox("New intergration for the account manager, making SAK and the account manager one program. Added new logs folder which keeps tabs on when and where SAK is opened. License keys are now obsolete as we are now transitioning to using an IP authenticating system. New login screen GUI. Minor updates to UI and feedback control.",64, "SAK BETA 0.4.2 News & Patch Notes") 
