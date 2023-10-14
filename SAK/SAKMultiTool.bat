@@ -1,20 +1,35 @@
 @echo off
-cls
-if exist C:\SAK\bin\logs\s.txt del C:\SAK\bin\logs\s.txt
-if exist C:\SAK\bin\accountinfo\d.txt del C:\SAK\bin\accountinfo\d.txt
+
+
+:home
+echo %ipfile% opened SAK on %date%%time% >C:\SAK\bin\logs\startlog%lognum%\startlog%lognum%.txt
 set /p datefile=<C:\SAK\bin\accountinfo\datecreated.txt
 set /p ipfile=<C:\SAK\bin\accountinfo\ip.txt
-set lognum=SSID%random%%random%
-powershell -window minimized -command ""
-title SAK BETA 0.4.3 // @pfpz
-color c0
-mkdir C:\SAK\bin\logs\startlog%lognum%
-echo %ipfile% opened SAK on %date%%time% >C:\SAK\bin\logs\startlog%lognum%\startlog%lognum%.txt
 if not exist C:\SAK\bin\accountinfo mkdir C:\SAK\bin\accountinfo
 if not exist C:\SAK\bin\logs mkdir C:\SAK\bin\logs 
+if exist C:\SAK\bin\logs\s.txt del C:\SAK\bin\logs\s.txt
+if exist C:\SAK\bin\accountinfo\d.txt del C:\SAK\bin\accountinfo\d.txt
+set lognum=SSID%random%%random%
+cls
+powershell -window normal -command ""
+title SAK BETA 0.4.4 // @pfpz
+color c0
+echo ________________________________________________________________
+echo _____/\\\\\\\\\\\_______/\\\\\\\\\_____/\\\________/\\\_________        
+echo ____/\\\/////////\\\___/\\\\\\\\\\\\\__\/\\\_____/\\\//_________      
+echo ____\//\\\______\///___/\\\/////////\\\_\/\\\__/\\\//___________      
+echo ______\////\\\_________\/\\\_______\/\\\_\/\\\\\\//\\\__________     
+echo __________\////\\\______\/\\\\\\\\\\\\\\\_\/\\\//_\//\\\________    
+echo ______________\////\\\___\/\\\/////////\\\_\/\\\____\//\\\______   
+echo ________/\\\______\//\\\__\/\\\_______\/\\\_\/\\\_____\//\\\____  
+echo ________\///\\\\\\\\\\\/___\/\\\_______\/\\\_\/\\\______\//\\\__ 
+echo ___________\///////////_____\///________\///__\///________\///__
+echo ________________________________________________________________
+echo    Please login using the message boxes that have been opened:     
+echo ________________________________________________________________ 
+mkdir C:\SAK\bin\logs\startlog%lognum%
 if not exist C:\SAK\bin\accountinfo\user.txt goto startfail
-goto home
-
+goto home2
 
 :startfail
 mkdir C:\SAK\bin\logs\faillog%lognum%
@@ -25,22 +40,21 @@ if not exist C:\SAK\bin\accountinfo mkdir C:\SAK\bin\accountinfo
 if not exist C:\SAK\bin\logs mkdir C:\SAK\bin\logs
 goto accountcreate 
 
-:home
+:home2
 set /p passfile=<C:\SAK\bin\accountinfo\pass.txt
 set /p userfile=<C:\SAK\bin\accountinfo\user.txt
-powershell -window minimized -command ""
-powershell -Command "& {Add-Type -AssemblyName Microsoft.VisualBasic; [Microsoft.VisualBasic.Interaction]::InputBox('Enter your username:', 'SAK BETA 0.4.3 Login')}" > %TEMP%\user.tmp 
-powershell -Command "& {Add-Type -AssemblyName Microsoft.VisualBasic; [Microsoft.VisualBasic.Interaction]::InputBox('Enter your password:', 'SAK BETA 0.4.3 Login')}" > %TEMP%\pass.tmp
-set /p user=<%TEMP%\user.tmp
-set /p pass=<%TEMP%\pass.tmp
-if not %user%==%userfile% goto fail 
+powershell -Command "& {Add-Type -AssemblyName Microsoft.VisualBasic; Add-Type -AssemblyName System.Windows.Forms; [Microsoft.VisualBasic.Interaction]::InputBox('Enter your username:', 'SAK BETA 0.4.4 Login', ''); $mainForm.Controls.Add($lbl); $mainForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen; $mainForm.ShowDialog()}" > %TEMP%\user.tmp 
+set /p user=<%TEMP%\user.tmp                                                                                             
+if not %user%==%userfile% goto fail
+powershell -Command "& {Add-Type -AssemblyName Microsoft.VisualBasic; Add-Type -AssemblyName System.Windows.Forms; [Microsoft.VisualBasic.Interaction]::InputBox('Enter your password:', 'SAK BETA 0.4.4 Login'); $mainForm.Controls.Add($lbl); $mainForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen; $mainForm.ShowDialog()}" > %TEMP%\pass.tmp 
+set /p pass=<%TEMP%\pass.tmp 
 if not %pass%==%passfile% goto fail 
 for /f "tokens=2 delims=:" %%a in ('ipconfig^|find "IPv4 Address"') do (
 set ip=%%a
-goto :BREAK
+goto BREAK2
 )
 
-:BREAK
+:BREAK2
 mkdir C:\SAK\bin\logs\goodlog%lognum%
 echo %ip: =% logged in on %date%%time% with username %user% and password %pass% >C:\SAK\bin\logs\goodlog%lognum%\goodlog%lognum%.txt
 goto menu
@@ -48,27 +62,32 @@ goto menu
 
 
 :loggedout
+cls
 mkdir C:\SAK\bin\logs\startlog%lognum%
 echo %ipfile% logged out of %userfile% on %date%%time% >C:\SAK\bin\logs\startlog%lognum%\startlog%lognum%.txt
 powershell -window normal -command ""
 echo You are now logged out of %userfile%...
-timeout /t 5 /nobreak
+timeout /t 3 /nobreak
 goto home
 
 :fail
-mkdir C:\SAK\bin\logs\faillog%lognum%
+cls
 powershell -window minimized -command ""
 cls
-start C:\SAK\bin\loginerrormsg.vbs
-timeout /t 1 /nobreak
 for /f "tokens=2 delims=:" %%a in ('ipconfig^|find "IPv4 Address"') do (
 set ip=%%a
-goto :BREAK
+goto BREAK
 )
 
 :BREAK
 mkdir C:\SAK\bin\logs\badlog%lognum%
 echo %ip: =% failed a log in on %date%%time% with username %user% and password %pass% >C:\SAK\bin\logs\badlog%lognum%\badlog%lognum%.txt
+powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Your login has failed. Press Ok to retry or Cancel to close SAK. If error persists contact @pfpz', 'Login error: ', 'OkCancel', [System.Windows.Forms.MessageBoxIcon]::Warning; $mainForm.Controls.Add($lbl); $mainForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen; $mainForm.ShowDialog()}" > %TEMP%\out45.tmp
+set /p OUT45=<%TEMP%\out45.tmp
+if %OUT45%==OK goto home
+if %OUT45%==Cancel exit
+if %OUT45%==X exit
+timeout /t 1 /nobreak
 goto home
 
 :menu
@@ -76,9 +95,9 @@ cls
 powershell -window normal -command ""
 color c0
 mode con:cols=100 lines=30
-title SAK BETA 0.4.3 Directory // @pfpz
-echo. SSID (Session ID):  // Use this to identify which log is for which session
-echo. %lognum%
+title SAK BETA 0.4.4 Directory // @pfpz
+echo.     SSID (Session ID):  // Use this to identify which log is for which session
+echo.     %lognum% // Current User: %userfile%
 echo. ----------------------------------------------------------------------------------------
 echo.  !!!!!!!!!!!!!!!!!!!!! SAK Multi Tool (Swiss army knife) is a tool !!!!!!!!!!!!!!!!!!!!
 echo.  !  Swiss Army Knife ! coded in batch for Windows based devices    ! Swiss Army Knife !
@@ -91,13 +110,12 @@ echo. --------------------------------------------------------------------------
 echo.      [RAINBOW Pinger] - 1 // [IP Tracker] - 2 // [Wifi Recovery] - 3 // [Logout] - 4 
 echo. -----------------------------------------------------------------------------------------
 echo.            [Browser] - 5 // [Exit] - 6 // [News] - 7 // [Account Manager] - 8
-echo. 
-set /p menuans=Directory selection:  
-
+echo.
+set /p menuans=Directory selection: 
 if %menuans%==1 goto rainbowp
 if %menuans%==2 goto tracker
 if %menuans%==3 goto wifirec
-if %menuans%==4 goto home
+if %menuans%==4 goto loggedout
 if %menuans%==5 goto browser
 if %menuans%==6 exit 
 if %menuans%==7 goto newstab
@@ -106,13 +124,15 @@ if %menuans%==123 goto menu
 
 :newstab
 cls
-start C:\SAK\bin\news.vbs
-goto menu
+powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Major bug fixes and feedback control fixes. Major UI and GUI changes. Stay up to date with all new features and updates by following my TikTok @pfpz', 'SAK BETA 0.4.4 News & Patch Notes', 'OK'); [System.Windows.Forms.MessageBoxIcon]::Information; $mainForm.Controls.Add($lbl); $mainForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen; $mainForm.ShowDialog()}" > %TEMP%\out96.tmp
+set /p out96=<%TEMP%\out96.tmp
+if %out96%==OK goto menu
+if %out96%==X goto menu
 
 :rainbowp
 cls
 color 0c
-title SAK BETA 0.4.3 RAINBOW Pinger! // @pfpz
+title SAK BETA 0.4.4 RAINBOW Pinger! // @pfpz
 mode con:cols=100 lines:60 
 echo !!!!!!!!!!!!!!!!!!!!! 
 echo !  Swiss Army Knife !
@@ -214,7 +234,7 @@ goto pinger
 cls
 color c0
 mode con:cols=60 lines:40 
-title SAK BETA 0.4.3 IP Tracker // @pfpz
+title SAK BETA 0.4.4 IP Tracker // @pfpz
 echo !!!!!!!!!!!!!!!!!!!!!
 echo !  Swiss Army Knife !
 echo !     Multi Tool    !
@@ -230,7 +250,7 @@ goto tracked
 cls
 color 0c
 mode con:cols=80 lines:40 
-title SAK BETA 0.4.3 IP Tracker // @pfpz
+title SAK BETA 0.4.4 IP Tracker // @pfpz
 echo !!!!!!!!!!!!!!!!!!!!!
 echo !  Swiss Army Knife !
 echo !     Multi Tool    !
@@ -247,7 +267,7 @@ if %tracked2%==2 goto menu
 
 :wifirec
 cls
-title SAK BETA 0.4.3 Wifi Recovery // @pfpz
+title SAK BETA 0.4.4 Wifi Recovery // @pfpz
 echo !!!!!!!!!!!!!!!!!!!!!
 echo !  Swiss Army Knife !
 echo !     Multi Tool    !
@@ -318,17 +338,22 @@ for /l %%L in (1 1 10)do <con: set /p "'= !CR!!BS!!CR![!_bar:~0,%%~L!!BS!!_spc:~
 
 cd C:\Program Files\Internet Explorer
 iexplore http://www.google.pt/search?q=%browserq%
-powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $notify = New-Object System.Windows.Forms.NotifyIcon; $notify.Icon = [System.Drawing.SystemIcons]::Information; $notify.Visible = $true; $notify.ShowBalloonTip(0, 'SAK.SBB', 'Your search is now done.', [System.Windows.Forms.ToolTipIcon]::None)}"
+powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $notify = New-Object System.Windows.Forms.NotifyIcon; $notify.Icon = [System.Drawing.SystemIcons]::Information; $notify.Visible = $true; $notify.ShowBalloonTip(0, 'SAK.SBB', 'Your search is now done.', [System.Windows.Forms.ToolTipIcon]::Information)}"
 goto browser
 
 :homesaklic
+set /p passfile=<C:\SAK\bin\accountinfo\pass.txt
+set /p userfile=<C:\SAK\bin\accountinfo\user.txt
+set /p datefile=<C:\SAK\bin\accountinfo\datecreated.txt
+set /p ipfile=<C:\SAK\bin\accountinfo\ip.txt
 title SAK Account Manager // @pfpz
 cls
 color 0a
 cls
+if exist C:\SAK\bin\accountinfo\user.txt (echo Current user is %userfile%) else echo There is currently no accounts created on this device
 echo Create an account now if this is your first time or make a new account! (E)xit \ (S)AK
 echo -------------------------------------------------------------------------------------------
-set /p choice=Do you want to (C)reate a new account, (D)elete an account,or see account (I)nfo?: 
+set /p choice=Do you want to (C)reate a new account, (D)elete an account, or see account (I)nfo?: 
 if %choice%==c goto accountcreate
 if %choice%==d goto accountdelete
 if %choice%==e exit
@@ -415,14 +440,15 @@ goto homesaklic
 cls
 color a0
 title SAK Account Created Succesfully: // @pfpz
-powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Your account was successfully created. Press Yes to continue to SAK, No to go back to the account manager menu or Cancel to revert this process', 'SAK Account Created!: ', 'YesNoCancel', [System.Windows.Forms.MessageBoxIcon]::Information);}" > %TEMP%\out.tmp
-set /p buttonpress=<%TEMP%\out.tmp
+powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Your account was successfully created. Press Yes to continue to SAK, No to go back to the account manager menu or Cancel to revert this process', 'SAK Account Created!: ', 'YesNoCancel', [System.Windows.Forms.MessageBoxIcon]::Information);}" > %TEMP%\out78.tmp
+set /p buttonpress=<%TEMP%\out78.tmp
 if %buttonpress%==Yes goto home
 if %buttonpress%==No goto homesaklic
 if %buttonpress%==Cancel (del C:\SAK\bin\accountinfo\user.txt
 del C:\SAK\bin\accountinfo\pass.txt
 del C:\SAK\bin\accountinfo\datecreated.txt
-del C:\SAK\bin\accountinfo\ip.txt) 
+del C:\SAK\bin\accountinfo\ip.txt
+goto accountcreate) 
 goto homesaklic
 
 :accinfo

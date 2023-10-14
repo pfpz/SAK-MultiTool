@@ -1,1 +1,1 @@
-x=msgbox("Bug fixes and tweaks. Fixes to log system. Minor updates to UI and feedback control.",64, "SAK BETA 0.4.3 News & Patch Notes") 
+x=msgbox("Major bug fixes and feedback control fixes. Major UI and GUI changes. Stay up to date with all new features and updates by following my TikTok @pfpz",64, "SAK BETA 0.4.4 News & Patch Notes")
