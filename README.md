@@ -18,7 +18,7 @@ To run, you must extract the "SAK" folder to your desktop, then move it to your 
 
 -
 
-You must make an account on first launch or if an account has been deleted. If for any reason you can not make a new account or the account manager will not launch via the directory, go to SAK\bin\siklac.bat and launch the program. If your errors persist please contact @pfpz on github/tiktok or @k6iyo on telegram!
+You must make an account on first launch or if an account has been deleted. If you have any errors while creating an account please contact @pfpz on github/tiktok or @k6iyo on telegram!
 
 # Min System Req:
 
